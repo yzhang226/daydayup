@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.dadayup.luck.rhino.dao.InventoryDao">
+
+    <resultMap id="BaseResultMap" type="org.dadayup.luck.rhino.entity.Inventory">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="product_id" jdbcType="BIGINT" property="productId" />
+        <result column="amount" jdbcType="BIGINT" property="amount" />
+    </resultMap>
+
+    <sql id="BaseColumnList">
+        id, product_id, amount
+    </sql>
+
+    <sql id="BaseWhereClause">
+        <where>
+            <trim prefix="(" prefixOverrides="and" suffix=")">
+                <if test="criteria.id != null">and id = #{criteria.id}</if>
+                <if test="criteria.productId != null">and product_id = #{criteria.amount}</if>
+                <if test="criteria.amount != null">and amount = #{criteria.amount}</if>
+            </trim>
+        </where>
+    </sql>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="BaseColumnList" />
+        from inventory
+        where id = #{id}
+    </select>
+
+    <insert id="save" parameterType="org.dadayup.luck.rhino.entity.Inventory"
+            keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into inventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="productId != null">product_id,</if>
+            <if test="amount != null">amount,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="productId != null">#{productId},</if>
+            <if test="amount != null">#{amount},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="org.dadayup.luck.rhino.entity.Inventory">
+        update inventory
+        <set>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <select id="query" resultMap="BaseResultMap" parameterType="map" >
+        select <include refid="BaseColumnList" />
+        from inventory
+        <include refid="BaseWhereClause" />
+    </select>
+
+</mapper>
